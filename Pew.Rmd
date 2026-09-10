@@ -1,0 +1,246 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+library(pewdata)
+```
+
+
+
+
+
+```{r warning=FALSE}
+pew <- read.csv("January 3-10, 2018 - Core Trends Survey/January 3-10, 2018 - Core Trends Survey - CSV.csv")
+```
+
+
+Reading in the .CSV file.
+
+
+```{r}
+glimpse(pew)
+```
+
+
+A glimpse of the data.
+
+
+```{r}
+pew <- pew %>% 
+  mutate(web1c = as.factor(web1c))
+
+
+pew %>% 
+  count(web1c)
+```
+
+
+Converting Facebook use data to be a factor.
+
+
+```{r}
+pew <- pew %>%
+mutate(Facebook = fct_recode(web1c, 
+                             "yes" = "1", 
+                             "No" = "2",
+                             "Dont know" = "8",
+                             "Refused" = "9"))
+      
+pew %>%
+  count(Facebook)
+```
+
+
+Re-coding numerical data to give character labels for use of Facebook.
+
+
+```{r}
+pew <- pew %>% 
+  mutate(educ2 = as.factor(educ2))
+
+
+pew %>% 
+  count(educ2)
+```
+
+
+Converting the education data to be a factor.
+
+
+```{r warning=TRUE}
+pew <- pew %>%
+  mutate(Education = fct_recode(educ2,
+                            "Less than HS" = "1", 
+                            "Some HS" = "2", 
+                            "HS graduate" = "3", 
+                            "Some college" = "4", 
+                            "Associate degree" = "5", 
+                            "College degree" = "6", 
+                            "Some grad school" = "7", 
+                            "Grad degree" = "8", 
+                            "Don't know" = "98", 
+                            "Refused" = "99"))
+
+
+pew %>%
+count(Education)
+```
+
+
+Re-coding numerical data to give character labels for education level.
+
+
+```{r}
+pew %>% 
+  drop_na(intfreq) %>%
+  count(Facebook, Education)
+```
+
+
+Facebook use by education level.
+
+
+```{r}
+pew %>% 
+  drop_na(intfreq) %>% 
+  ggplot(aes(x = Facebook, fill = Education)) +
+  geom_bar()
+```
+
+
+This vertical stacked bar graph indicates that there were almost an equal amount of Facebook users with the educational level of Some HS and College degree. It also appears that individuals with less than a High School diploma, were less likely to be on Facebook.
+
+
+```{r}
+pew %>% 
+  drop_na(intfreq) %>% 
+  ggplot(aes(x = Education, fill = Facebook)) +
+  scale_fill_viridis_d() +
+  geom_bar(position = "dodge") +
+coord_flip() +
+theme_minimal()
+```
+
+
+This is a vertical bar graph representing the same thing as the previous graph. Those with a college degree the largest population to use Facebook. It appears those with a less than High School education were on Facebook the least.
+
+
+```{r}
+pew <- pew %>% 
+  mutate(Education = fct_collapse(educ2,
+                                         College_below = c("College degree", "Associate degree",  "Some college", "HS graduate", "Some HS", "Less than HS"),
+                                         Grad_above = c("Grad degree", "Some grad school", "Don't know", "Refused")))
+
+pew %>% 
+  count(Education)
+```
+
+
+This shows education level grouped by under-graduate and graduate level.
+
+
+```{r}
+pew %>% 
+  drop_na(intfreq) %>% 
+  ggplot(aes(x = Education, fill = Facebook)) +
+  scale_fill_viridis_d() +
+  geom_bar(position = "fill") +
+coord_flip()
+```
+
+
+This is a horizontal stacked bar graph representation of the data. College degree utilized Facebook the most while those with less than a High school education utilized it the least.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
